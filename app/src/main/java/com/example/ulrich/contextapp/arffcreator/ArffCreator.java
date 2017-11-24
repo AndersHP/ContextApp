@@ -27,6 +27,7 @@ public class ArffCreator {
         try{
             arffSaverInstance.setFile(file);
             arffSaverInstance.writeBatch();
+
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -45,7 +46,6 @@ public class ArffCreator {
         atts.addElement(new Attribute("class",attVals));
 
 
-
         Instances data = new Instances("ContextApp", atts, 0);
 
         for(DataWindow window : dataWindows)
@@ -54,8 +54,8 @@ public class ArffCreator {
             vals[0] = window.min;
             vals[1] = window.max;
             vals[2] = window.stDevMag;
-            vals[3] = data.attribute(3).addStringValue(className);
             data.add(new Instance(1.0, vals));
+
         }
         return data;
     }
