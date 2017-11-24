@@ -50,11 +50,16 @@ public class ArffCreator {
 
         for(DataWindow window : dataWindows)
         {
-            double[] vals = new double[data.numAttributes()];
-            vals[0] = window.min;
-            vals[1] = window.max;
-            vals[2] = window.stDevMag;
-            data.add(new Instance(1.0, vals));
+            Instance newInstance = new Instance(4);
+            newInstance.setValue(0, window.min);
+            newInstance.setValue(1, window.max);
+            newInstance.setValue(2, window.stDevMag);
+            newInstance.setValue(3, className);
+            //double[] vals = new double[data.numAttributes()];
+            //vals[0] = window.min;
+            //vals[1] = window.max;
+            //vals[2] = window.stDevMag;
+            data.add(newInstance    );
 
         }
         return data;
