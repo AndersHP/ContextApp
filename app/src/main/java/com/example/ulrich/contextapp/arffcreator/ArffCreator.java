@@ -5,11 +5,13 @@ import com.example.ulrich.contextapp.datawindow.DataWindow;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
-import weka.filters.unsupervised.instance.NonSparseToSparse;
+import weka.core.Attribute;
+import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ArffSaver;
-
+import weka.core.FastVector;
 /**
  * Created by Anders on 23-11-2017.
  */
@@ -32,6 +34,23 @@ public class ArffCreator {
 
     private static Instances createArff(List<DataWindow> dataWindows, String className)
     {
+        FastVector atts = new FastVector();
+        atts.addElement(new Attribute("min"));
+        atts.addElement(new Attribute("max"));
+        atts.addElement(new Attribute("stdDev"));
+        atts.addElement(new Attribute("class"));
 
+        Instances data = new Instances("ContextApp", atts, 0);
+
+        for(DataWindow window : dataWindows)
+        {
+            double[] vals = new double[data.numAttributes()];
+            vals[0] = window.min;
+            vals[1] = window.max;
+            vals[2] = window.stDevMag;
+            vals[3] = data.attribute(3).addStringValue(className);
+            data.add(new Instance(1.0, vals));
+        }
+        return data;
     }
 }

@@ -10,6 +10,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
 import com.example.ulrich.contextapp.datawindow.DataWindow;
+import com.example.ulrich.contextapp.arffcreator.ArffCreator;
 import java.util.ArrayList;
 import java.lang.Math;
 
@@ -70,7 +71,6 @@ public class AccelerometerWidget implements SensorEventListener{
 
     private void makeDataWindow()
     {
-
         // Calculate min, max
         int N = 128; //window size
         float min = Float.MAX_VALUE;
@@ -95,6 +95,7 @@ public class AccelerometerWidget implements SensorEventListener{
         // Add new DataWindow
         DataWindow newWindow = new DataWindow(min, max,stdDev);
         dataWindows.add(newWindow);
+        ArffCreator.saveArff(dataWindows,"runningdata","running");
     }
 
     private float sample(float x, float y, float z){

@@ -5,7 +5,7 @@ package com.example.ulrich.contextapp.datawindow;
  */
 
 public class DataWindow {
-    private float min, max, stDevMag;
+    public float min, max, stDevMag;
 
     public DataWindow(float min, float max, float stDevMag)
     {
