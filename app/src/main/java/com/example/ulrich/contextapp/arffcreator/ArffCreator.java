@@ -38,7 +38,13 @@ public class ArffCreator {
         atts.addElement(new Attribute("min"));
         atts.addElement(new Attribute("max"));
         atts.addElement(new Attribute("stdDev"));
-        atts.addElement(new Attribute("class"));
+        FastVector attVals = new FastVector();
+        attVals.addElement("running");
+        attVals.addElement("walking");
+        attVals.addElement("standing");
+        atts.addElement(new Attribute("class",attVals));
+
+
 
         Instances data = new Instances("ContextApp", atts, 0);
 
