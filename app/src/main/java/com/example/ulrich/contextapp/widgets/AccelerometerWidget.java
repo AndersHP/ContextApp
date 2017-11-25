@@ -26,7 +26,10 @@ public class AccelerometerWidget implements SensorEventListener{
     private int currentIndex = 0;
     private final int SAMPLE_FREQUENCY = 40;
 
-    public AccelerometerWidget(SensorManager manager){
+    private String className;
+
+    public AccelerometerWidget(SensorManager manager,String className ){
+        this.className = className;
         senSensorManager = manager;
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         senSensorManager.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
@@ -95,7 +98,7 @@ public class AccelerometerWidget implements SensorEventListener{
         // Add new DataWindow
         DataWindow newWindow = new DataWindow(min, max,stdDev);
         dataWindows.add(newWindow);
-        ArffCreator.saveArff(dataWindows,"runningdata","running");
+        ArffCreator.saveArff(dataWindows,"runningdata",className);
     }
 
     private float sample(float x, float y, float z){
