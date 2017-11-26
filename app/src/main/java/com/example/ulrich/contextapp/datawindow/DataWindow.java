@@ -5,12 +5,16 @@ package com.example.ulrich.contextapp.datawindow;
  */
 
 public class DataWindow {
-    public float min, max, stDevMag;
+    public float hourOfDay, minAcc, maxAcc, stDevMagAcc, minMic, maxMic, stDevMic ;
 
-    public DataWindow(float min, float max, float stDevMag)
+    public DataWindow(float hourOfDay, float minAcc, float maxAcc, float stDevMagAcc, float minMic,float maxMic, float stDevMic)
     {
-        this.min = min;
-        this.max = max;
-        this.stDevMag = stDevMag;
+        this.hourOfDay = hourOfDay;
+        this.minAcc = minAcc;
+        this.maxAcc = maxAcc;
+        this.stDevMagAcc = stDevMagAcc;
+        this.minMic = minMic;
+        this.maxMic = maxMic;
+        this.stDevMic = stDevMic;
     }
 }

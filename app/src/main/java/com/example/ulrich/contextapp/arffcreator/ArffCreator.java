@@ -35,21 +35,31 @@ public class ArffCreator {
 
     private static Instances createArff(List<DataWindow> dataWindows, String className)
     {
-        Attribute minAtt = new Attribute("min");
-        Attribute maxAtt = new Attribute("max");
-        Attribute sdAtt = new Attribute("sd");
+        Attribute hour = new Attribute("hourOfDay");
+        Attribute minAccAtt = new Attribute("minAcc");
+        Attribute maxAccAtt = new Attribute("maxAcc");
+        Attribute sdDevAccAtt = new Attribute("sdDevAcc");
+        Attribute minMicAtt = new Attribute("minMic");
+        Attribute maxMicAtt = new Attribute("maxMic");
+        Attribute stDevMicAtt = new Attribute("stDevAcc");
+
         FastVector classNames = new FastVector(3);
         classNames.addElement("stand");                    //here you set all the classes that appear at the top of the .arff file later
-        classNames.addElement("walk");
+        classNames.addElement("walkNoisy");
+        classNames.addElement("walkSilent");
         classNames.addElement("run");
         Attribute classAtt = new Attribute("class", classNames);
-// Declare the feature vector
+        // Declare the feature vector
         FastVector attributes = new  FastVector(4);
-        attributes.addElement(minAtt);
-        attributes.addElement(maxAtt);
-        attributes.addElement(sdAtt);
+        attributes.addElement(hour);
+        attributes.addElement(minAccAtt);
+        attributes.addElement(maxAccAtt);
+        attributes.addElement(sdDevAccAtt);
+        attributes.addElement(minMicAtt);
+        attributes.addElement(maxMicAtt);
+        attributes.addElement(stDevMicAtt);
         attributes.addElement(classAtt);
-//Create the Instances object
+        //Create the Instances object
         Instances data = new Instances("Window", attributes, 0);
 
 
@@ -57,9 +67,13 @@ public class ArffCreator {
         for(DataWindow window : dataWindows)
         {
             Instance newInstance = new Instance(4);
-            newInstance.setValue(minAtt, window.min);
-            newInstance.setValue(maxAtt, window.max);
-            newInstance.setValue(sdAtt, window.stDevMag);
+            newInstance.setValue(hour, window.hourOfDay);
+            newInstance.setValue(minAccAtt, window.minAcc);
+            newInstance.setValue(maxAccAtt, window.maxAcc);
+            newInstance.setValue(sdDevAccAtt, window.stDevMagAcc);
+            newInstance.setValue(minMicAtt, window.minMic);
+            newInstance.setValue(maxMicAtt, window.maxMic);
+            newInstance.setValue(stDevMicAtt, window.stDevMic);
             newInstance.setValue(classAtt, className);
             //double[] vals = new double[data.numAttributes()];
             //vals[0] = window.min;
