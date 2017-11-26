@@ -35,26 +35,32 @@ public class ArffCreator {
 
     private static Instances createArff(List<DataWindow> dataWindows, String className)
     {
-        FastVector atts = new FastVector();
-        atts.addElement(new Attribute("min"));
-        atts.addElement(new Attribute("max"));
-        atts.addElement(new Attribute("stdDev"));
-        FastVector attVals = new FastVector();
-        attVals.addElement("running");
-        attVals.addElement("walking");
-        attVals.addElement("standing");
-        atts.addElement(new Attribute("class",attVals));
+        Attribute minAtt = new Attribute("min");
+        Attribute maxAtt = new Attribute("max");
+        Attribute sdAtt = new Attribute("sd");
+        FastVector classNames = new FastVector(3);
+        classNames.addElement("stand");                    //here you set all the classes that appear at the top of the .arff file later
+        classNames.addElement("walk");
+        classNames.addElement("run");
+        Attribute classAtt = new Attribute("class", classNames);
+// Declare the feature vector
+        FastVector attributes = new  FastVector(4);
+        attributes.addElement(minAtt);
+        attributes.addElement(maxAtt);
+        attributes.addElement(sdAtt);
+        attributes.addElement(classAtt);
+//Create the Instances object
+        Instances data = new Instances("Window", attributes, 0);
 
 
-        Instances data = new Instances("ContextApp", atts, 0);
 
         for(DataWindow window : dataWindows)
         {
             Instance newInstance = new Instance(4);
-            newInstance.setValue(0, window.min);
-            newInstance.setValue(1, window.max);
-            newInstance.setValue(2, window.stDevMag);
-            newInstance.setValue(3, className);
+            newInstance.setValue(minAtt, window.min);
+            newInstance.setValue(maxAtt, window.max);
+            newInstance.setValue(sdAtt, window.stDevMag);
+            newInstance.setValue(classAtt, className);
             //double[] vals = new double[data.numAttributes()];
             //vals[0] = window.min;
             //vals[1] = window.max;

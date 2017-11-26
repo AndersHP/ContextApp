@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         // initialize dropdown
         final Spinner dropdown = (Spinner)findViewById(R.id.spinner1);
-        String[] items = new String[]{"running", "walking", "standing"};
+        String[] items = new String[]{"run", "walk", "stand"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
         dropdown.setAdapter(adapter);
 
