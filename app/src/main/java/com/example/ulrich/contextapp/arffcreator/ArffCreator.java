@@ -1,5 +1,7 @@
 package com.example.ulrich.contextapp.arffcreator;
 
+import android.util.Log;
+
 import com.example.ulrich.contextapp.datawindow.DataWindow;
 
 import java.io.File;
@@ -18,8 +20,8 @@ import weka.core.FastVector;
 
 public class ArffCreator {
 
-    public static void saveArff(List<DataWindow> dataWindows, String fileName, String className){
-        Instances sparseDataset = createArff(dataWindows,className);
+    public static void saveArff(List<DataWindow> dataWindows, String fileName){
+        Instances sparseDataset = createArff(dataWindows);
         ArffSaver arffSaverInstance = new ArffSaver();
 
         arffSaverInstance.setInstances(sparseDataset);
@@ -33,7 +35,7 @@ public class ArffCreator {
         }
     }
 
-    private static Instances createArff(List<DataWindow> dataWindows, String className)
+    private static Instances createArff(List<DataWindow> dataWindows)
     {
         Attribute hour = new Attribute("hourOfDay");
         Attribute minAccAtt = new Attribute("minAcc");
@@ -75,13 +77,9 @@ public class ArffCreator {
             newInstance.setValue(minMicAtt, window.minMic);
             newInstance.setValue(maxMicAtt, window.maxMic);
             newInstance.setValue(stDevMicAtt, window.stDevMic);
-            newInstance.setValue(classAtt, className);
-            //double[] vals = new double[data.numAttributes()];
-            //vals[0] = window.min;
-            //vals[1] = window.max;
-            //vals[2] = window.stDevMag;
-            data.add(newInstance    );
+            newInstance.setValue(classAtt, window.className);
 
+            data.add(newInstance);
         }
         return data;
     }

@@ -45,12 +45,48 @@ public class Aggregator implements Runnable
     public void setCollecting(boolean shouldCollect)
     {
         collecting = shouldCollect;
+
+
+        if(!collecting)
+            clearReadings();
     }
 
+    private void clearReadings(){
+        microphoneReadings = new double[128];
+        accelerometerReadings = new float[128][3];
+        currentIndex = 0;
+    }
 
     private float getCurrentHour()
     {
         return Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+    }
+
+    @Override
+    public void run()
+    {
+        while (collecting)
+        {
+            // Wait abit between readings
+            long curTime = System.currentTimeMillis();
+            if ((curTime - lastUpdate) > SAMPLE_FREQUENCY) {
+                lastUpdate = curTime;
+
+                if (currentIndex > 127)
+                    currentIndex = 0;
+
+
+                double microphoneReading = microphoneWidget.getLastAmplitudeReading();
+                float[] accelerometerReading = accelerometerWidget.getReading();
+                microphoneReadings[currentIndex] = microphoneReading;
+                accelerometerReadings[currentIndex] = accelerometerReading;
+                if (currentIndex == 63 || currentIndex == 127)
+                {
+                    makeDataWindow();
+                }
+                currentIndex++;
+            }
+        }
     }
 
     private void makeDataWindow()
@@ -98,9 +134,9 @@ public class Aggregator implements Runnable
 
 
         Log.d("newWindow", "Making new datawindow" );
-        DataWindow newWindow = new DataWindow(getCurrentHour(), minAcc, maxAcc, stdDevAcc, minMic, maxMic, stdDevMic);
+        DataWindow newWindow = new DataWindow(getCurrentHour(), minAcc, maxAcc, stdDevAcc, minMic, maxMic, stdDevMic, currentClass);
         dataWindows.add(newWindow);
-        ArffCreator.saveArff(dataWindows,"runningdata",currentClass);
+        ArffCreator.saveArff(dataWindows,"runningdata");
     }
 
     private float sample(float x, float y, float z){
@@ -108,34 +144,5 @@ public class Aggregator implements Runnable
         double y_squared = Math.pow(y,2);
         double z_squared = Math.pow(z,2);
         return (float)Math.sqrt(x_squared + y_squared + z_squared);
-    }
-
-    @Override
-    public void run()
-    {
-        while (collecting)
-        {
-            // Wait abit between readings
-            long curTime = System.currentTimeMillis();
-            if ((curTime - lastUpdate) > SAMPLE_FREQUENCY) {
-                lastUpdate = curTime;
-
-                if (currentIndex > 127)
-                    currentIndex = 0;
-
-
-                double microphoneReading = microphoneWidget.getLastAmplitudeReading();
-                float[] accelerometerReading = accelerometerWidget.getReading();
-                microphoneReadings[currentIndex] = microphoneReading;
-                accelerometerReadings[currentIndex] = accelerometerReading;
-                Log.d("s"  ,    "new reading");
-                //Log.d("asd ","" +accelerometerReading[0]);
-                if (currentIndex == 63 || currentIndex == 127)
-                {
-                    makeDataWindow();
-                }
-                currentIndex++;
-            }
-        }
     }
 }
