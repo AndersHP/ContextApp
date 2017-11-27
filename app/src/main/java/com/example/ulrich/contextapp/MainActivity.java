@@ -22,13 +22,14 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
 
-    Aggregator aggregator = new Aggregator();
+    private Aggregator aggregator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        aggregator = new Aggregator((SensorManager) getSystemService(Context.SENSOR_SERVICE));
 
         // initialize dropdown
         final Spinner dropdown = (Spinner)findViewById(R.id.spinner1);

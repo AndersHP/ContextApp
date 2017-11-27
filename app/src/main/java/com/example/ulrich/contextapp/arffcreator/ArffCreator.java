@@ -66,7 +66,7 @@ public class ArffCreator {
 
         for(DataWindow window : dataWindows)
         {
-            Instance newInstance = new Instance(4);
+            Instance newInstance = new Instance(8);
             newInstance.setValue(hour, window.hourOfDay);
             newInstance.setValue(minAccAtt, window.minAcc);
             newInstance.setValue(maxAccAtt, window.maxAcc);

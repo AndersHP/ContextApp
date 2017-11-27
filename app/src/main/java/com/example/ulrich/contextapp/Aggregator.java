@@ -1,5 +1,6 @@
 package com.example.ulrich.contextapp;
 
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.util.Log;
@@ -31,9 +32,9 @@ public class Aggregator
 
     private String currentClass;
 
-    public Aggregator()
+    public Aggregator(SensorManager sensorManager)
     {
-        accelerometerWidget = new AccelerometerWidget(SAMPLE_FREQUENCY);
+        accelerometerWidget = new AccelerometerWidget(SAMPLE_FREQUENCY, sensorManager);
         microphoneWidget = new MicrophoneWidget();
     }
 
@@ -60,8 +61,8 @@ public class Aggregator
                 float[] accelerometerReading = accelerometerWidget.getReading();
                 microphoneReadings[currentIndex] = microphoneReading;
                 accelerometerReadings[currentIndex] = accelerometerReading;
-
-                Log.d("asd ","" +currentIndex);
+                Log.d("s"  ,    "new reading");
+                //Log.d("asd ","" +accelerometerReading[0]);
                 if (currentIndex == 63 || currentIndex == 127)
                 {
                     makeDataWindow();
