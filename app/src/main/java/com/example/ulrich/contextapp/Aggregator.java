@@ -17,7 +17,7 @@ import java.util.Calendar;
  * Created by Anders on 26-11-2017.
  */
 
-public class Aggregator
+public class Aggregator implements Runnable
 {
     private long lastUpdate = 0;
     private ArrayList<DataWindow> dataWindows= new ArrayList<>();
@@ -38,39 +38,15 @@ public class Aggregator
         microphoneWidget = new MicrophoneWidget();
     }
 
-    public void stopCollecting(){
-        collecting = false;
+    public void setCurrentClass(String currentClass){
+        this.currentClass = currentClass;
     }
 
-    public void startCollecting(String className) {
-        currentClass = className;
-        collecting = true;
-
-        while (collecting)
-        {
-            // Wait abit between readings
-            long curTime = System.currentTimeMillis();
-            if ((curTime - lastUpdate) > SAMPLE_FREQUENCY) {
-                lastUpdate = curTime;
-
-                if (currentIndex > 127)
-                    currentIndex = 0;
-
-
-                double microphoneReading = microphoneWidget.getLastAmplitudeReading();
-                float[] accelerometerReading = accelerometerWidget.getReading();
-                microphoneReadings[currentIndex] = microphoneReading;
-                accelerometerReadings[currentIndex] = accelerometerReading;
-                Log.d("s"  ,    "new reading");
-                //Log.d("asd ","" +accelerometerReading[0]);
-                if (currentIndex == 63 || currentIndex == 127)
-                {
-                    makeDataWindow();
-                }
-                currentIndex++;
-            }
-        }
+    public void setCollecting(boolean shouldCollect)
+    {
+        collecting = shouldCollect;
     }
+
 
     private float getCurrentHour()
     {
@@ -100,16 +76,14 @@ public class Aggregator
         float stdDevAcc = (float)Math.sqrt(summedDifference / (N-1)); //standard deviation
 
 
-        float stDevMic;
-
         // Calculate microphone min, max
         float minMic = Float.MAX_VALUE;
         float maxMic = Float.MIN_VALUE;
         float sumMic = 0;
         for (int i = 0; i < N; i++) {
             float val = (float)microphoneReadings[i];
-            if(val < minAcc) { minAcc = val; }
-            if(val > maxAcc) { maxAcc = val; }
+            if(val < minMic) { minMic = val; }
+            if(val > maxMic) { maxMic = val; }
             sumMic += val;
         }
 
@@ -136,4 +110,32 @@ public class Aggregator
         return (float)Math.sqrt(x_squared + y_squared + z_squared);
     }
 
+    @Override
+    public void run()
+    {
+        while (collecting)
+        {
+            // Wait abit between readings
+            long curTime = System.currentTimeMillis();
+            if ((curTime - lastUpdate) > SAMPLE_FREQUENCY) {
+                lastUpdate = curTime;
+
+                if (currentIndex > 127)
+                    currentIndex = 0;
+
+
+                double microphoneReading = microphoneWidget.getLastAmplitudeReading();
+                float[] accelerometerReading = accelerometerWidget.getReading();
+                microphoneReadings[currentIndex] = microphoneReading;
+                accelerometerReadings[currentIndex] = accelerometerReading;
+                Log.d("s"  ,    "new reading");
+                //Log.d("asd ","" +accelerometerReading[0]);
+                if (currentIndex == 63 || currentIndex == 127)
+                {
+                    makeDataWindow();
+                }
+                currentIndex++;
+            }
+        }
+    }
 }

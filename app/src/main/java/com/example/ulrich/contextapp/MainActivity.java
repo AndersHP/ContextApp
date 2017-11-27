@@ -2,9 +2,11 @@ package com.example.ulrich.contextapp;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.media.MediaRecorder;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,7 +23,6 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-
     private Aggregator aggregator;
 
     @Override
@@ -29,11 +30,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         aggregator = new Aggregator((SensorManager) getSystemService(Context.SENSOR_SERVICE));
 
         // initialize dropdown
         final Spinner dropdown = (Spinner)findViewById(R.id.spinner1);
-        String[] items = new String[]{"run", "walkNoisy", "walkSilent", "cycle"};
+        String[] items = new String[]{"run", "walkNoisy", "walkSilent", "cycle","stand"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
         dropdown.setAdapter(adapter);
 
@@ -43,23 +45,23 @@ public class MainActivity extends AppCompatActivity {
             boolean isCollecting = false;
             public void onClick(View v) {
 
-                // TODO:
-                // Tell widget to start collecting data
                 String className = dropdown.getSelectedItem().toString();
 
-
-                // change button text
-                Log.d("Button", "button pressed");
                 isCollecting = !isCollecting;
                 if(isCollecting){
-                    aggregator.startCollecting(className);
+
+                    // When starting to collect, update classname and start a new thread
+                    aggregator.setCurrentClass(className);
+                    Thread thread = new Thread(aggregator);
+                    aggregator.setCollecting(true);
+                    thread.start();
+
                     button.setText("Stop collecting");
                 }else{
-                    aggregator.stopCollecting();
+                    aggregator.setCollecting(false);
                     button.setText("Start collecting");
                 }
             }
         });
-
     }
 }
