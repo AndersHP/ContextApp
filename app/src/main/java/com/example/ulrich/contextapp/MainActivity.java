@@ -1,5 +1,6 @@
 package com.example.ulrich.contextapp;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Log.d("MAINACTIVIT",    "MANACTIVITY ONCREATE CALLED");
         aggregator = new Aggregator((SensorManager) getSystemService(Context.SENSOR_SERVICE));
 
         setListeners();
@@ -59,6 +60,15 @@ public class MainActivity extends AppCompatActivity {
                     aggregator.setCollecting(false);
                     button.setText("Start collecting");
                 }
+            }
+        });
+
+        final Button button2 = (Button) findViewById(R.id.btnclassify);
+        button2.setOnClickListener(new View.OnClickListener(){
+
+            public void onClick(View v){
+                Intent myIntent = new Intent(MainActivity.this, ClassifierActivity.class);
+                MainActivity.this.startActivity(myIntent);
             }
         });
     }
