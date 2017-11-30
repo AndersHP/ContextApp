@@ -63,7 +63,7 @@ public class ArffCreator {
         attributes.addElement(stDevMicAtt);
         attributes.addElement(classAtt);
         //Create the Instances object
-        Instances data = new Instances("Window", attributes, 0);
+        Instances data = new Instances("Best.Context.app", attributes, 0);
 
 
 
