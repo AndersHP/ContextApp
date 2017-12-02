@@ -24,8 +24,9 @@ public class ClassifierActivity extends AppCompatActivity {
         button2.setOnClickListener(new View.OnClickListener(){
 
             public void onClick(View v){
-                Intent myIntent = new Intent( ClassifierActivity.this, MainActivity.class);
-                ClassifierActivity.this.startActivity(myIntent);
+                Intent intent = new Intent( ClassifierActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
             }
         });
     }
