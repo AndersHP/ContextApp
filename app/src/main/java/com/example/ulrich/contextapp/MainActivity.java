@@ -1,7 +1,13 @@
 package com.example.ulrich.contextapp;
+import android.Manifest;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.hardware.SensorManager;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +31,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.d("MAINACTIVIT",    "MANACTIVITY ONCREATE CALLED");
         aggregator = new Aggregator((SensorManager) getSystemService(Context.SENSOR_SERVICE));
+
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && !notificationManager.isNotificationPolicyAccessGranted()) {
+            Intent intent = new Intent(
+                    android.provider.Settings
+                            .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+            startActivity(intent);
+        }
+
 
         setListeners();
     }
@@ -67,8 +85,9 @@ public class MainActivity extends AppCompatActivity {
         button2.setOnClickListener(new View.OnClickListener(){
 
             public void onClick(View v){
-                Intent myIntent = new Intent(MainActivity.this, ClassifierActivity.class);
-                MainActivity.this.startActivity(myIntent);
+                Intent intent = new Intent(MainActivity.this, ClassifierActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                MainActivity.this.startActivity(intent);
             }
         });
     }
