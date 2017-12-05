@@ -37,7 +37,6 @@ public class ArffCreator {
 
     private static Instances createArff(List<DataWindow> dataWindows)
     {
-        Attribute hour = new Attribute("hourOfDay");
         Attribute minAccAtt = new Attribute("minAcc");
         Attribute maxAccAtt = new Attribute("maxAcc");
         Attribute sdDevAccAtt = new Attribute("sdDevAcc");
@@ -55,8 +54,7 @@ public class ArffCreator {
 
         Attribute classAtt = new Attribute("class", classNames);
         // Declare the feature vector
-        FastVector attributes = new  FastVector(8);
-        attributes.addElement(hour);
+        FastVector attributes = new  FastVector(7);
         attributes.addElement(minAccAtt);
         attributes.addElement(maxAccAtt);
         attributes.addElement(sdDevAccAtt);
@@ -71,8 +69,7 @@ public class ArffCreator {
 
         for(DataWindow window : dataWindows)
         {
-            Instance newInstance = new Instance(8);
-            newInstance.setValue(hour, window.hourOfDay);
+            Instance newInstance = new Instance(7);
             newInstance.setValue(minAccAtt, window.minAcc);
             newInstance.setValue(maxAccAtt, window.maxAcc);
             newInstance.setValue(sdDevAccAtt, window.stDevMagAcc);

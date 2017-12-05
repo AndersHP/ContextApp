@@ -5,12 +5,12 @@ package com.example.ulrich.contextapp.datawindow;
  */
 
 public class DataWindow {
-    public float hourOfDay, minAcc, maxAcc, stDevMagAcc, minMic, maxMic, stDevMic ;
+    public float  minAcc, maxAcc, stDevMagAcc, minMic, maxMic, stDevMic ;
     public String className;
 
-    public DataWindow(float hourOfDay, float minAcc, float maxAcc, float stDevMagAcc, float minMic,float maxMic, float stDevMic, String className)
+    public DataWindow(float minAcc, float maxAcc, float stDevMagAcc, float minMic,float maxMic, float stDevMic, String className)
     {
-        this.hourOfDay = hourOfDay;
+
         this.minAcc = minAcc;
         this.maxAcc = maxAcc;
         this.stDevMagAcc = stDevMagAcc;
@@ -22,6 +22,6 @@ public class DataWindow {
 
     public String toString()
     {
-        return "Hour of day: " + hourOfDay + " minAcc: " + minAcc + " maxAcc: " + maxAcc + " stDevMagAcc: " + stDevMagAcc + " minMic: " + minMic + " maxMic: " + maxMic + " stDevmic: " + stDevMic + " className: " + className;
+        return "minAcc: " + minAcc + " maxAcc: " + maxAcc + " stDevMagAcc: " + stDevMagAcc + " minMic: " + minMic + " maxMic: " + maxMic + " stDevmic: " + stDevMic + " className: " + className;
     }
 }

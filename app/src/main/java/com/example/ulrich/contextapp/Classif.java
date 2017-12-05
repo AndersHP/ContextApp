@@ -56,7 +56,7 @@ public class Classif
 
     public void startClassifying()
     {
-        DataWindow window = new DataWindow(23,(float) 13.2,10,4,10,24,10,"?");
+        DataWindow window = new DataWindow(22,10,4,10,24,10,"?");
         Instance newInstance = new Instance(8);
 
         Attribute hour = new Attribute("hourOfDay");
@@ -86,7 +86,6 @@ public class Classif
         //Create the Instances object
         Instances data = new Instances("Best.Context.app", attributes, 0);
         newInstance.setDataset(data);
-        newInstance.setValue(0, window.hourOfDay);
         newInstance.setValue(1, window.minAcc);
         newInstance.setValue(2, window.maxAcc);
         newInstance.setValue(3, window.stDevMagAcc);

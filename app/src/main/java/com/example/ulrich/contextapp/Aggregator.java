@@ -70,11 +70,6 @@ public class Aggregator implements Runnable
         return lastDataWindow;
     }
 
-    private float getCurrentHour()
-    {
-        return Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-    }
-
     @Override
     public void run()
     {
@@ -149,7 +144,7 @@ public class Aggregator implements Runnable
 
 
         Log.d("newWindow", "Making new datawindow" );
-        DataWindow newWindow = new DataWindow(getCurrentHour(), minAcc, maxAcc, stdDevAcc, minMic, maxMic, stdDevMic, currentClass);
+        DataWindow newWindow = new DataWindow(minAcc, maxAcc, stdDevAcc, minMic, maxMic, stdDevMic, currentClass);
         dataWindows.add(newWindow);
         lastDataWindow = newWindow;
 
