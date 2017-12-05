@@ -21,20 +21,24 @@ public class Aggregator implements Runnable
 {
     private long lastUpdate = 0;
     private ArrayList<DataWindow> dataWindows= new ArrayList<>();
+    private DataWindow lastDataWindow = null;
     private int currentIndex = 0;
-    private final int SAMPLE_FREQUENCY = 40;
+    private final int SAMPLE_FREQUENCY;
     private boolean collecting = false;
     private AccelerometerWidget accelerometerWidget;
     private MicrophoneWidget microphoneWidget;
+    private boolean classifying;
 
     private double[] microphoneReadings = new double[128];
     private float[][] accelerometerReadings = new float[128][3];
 
     private String currentClass;
 
-    public Aggregator(SensorManager sensorManager)
+    public Aggregator(SensorManager sensorManager, int sampleFrequency, boolean classifying)
     {
-        accelerometerWidget = new AccelerometerWidget(SAMPLE_FREQUENCY, sensorManager);
+        this.classifying = classifying;
+        SAMPLE_FREQUENCY = sampleFrequency;
+        accelerometerWidget = new AccelerometerWidget(sampleFrequency, sensorManager);
         microphoneWidget = new MicrophoneWidget();
     }
 
@@ -46,9 +50,14 @@ public class Aggregator implements Runnable
     {
         collecting = shouldCollect;
 
-
-        if(!collecting)
+        if(!collecting){
             clearReadings();
+            if(microphoneWidget.isStarted())
+                microphoneWidget.stop();
+        }else{
+            microphoneWidget.start();
+        }
+
     }
 
     private void clearReadings(){
@@ -80,6 +89,7 @@ public class Aggregator implements Runnable
                 float[] accelerometerReading = accelerometerWidget.getReading();
                 microphoneReadings[currentIndex] = microphoneReading;
                 accelerometerReadings[currentIndex] = accelerometerReading;
+
                 if (currentIndex == 63 || currentIndex == 127)
                 {
                     makeDataWindow();
@@ -136,7 +146,10 @@ public class Aggregator implements Runnable
         Log.d("newWindow", "Making new datawindow" );
         DataWindow newWindow = new DataWindow(getCurrentHour(), minAcc, maxAcc, stdDevAcc, minMic, maxMic, stdDevMic, currentClass);
         dataWindows.add(newWindow);
-        ArffCreator.saveArff(dataWindows,"runningdata");
+        lastDataWindow = newWindow;
+
+        if(!classifying)
+            ArffCreator.saveArff(dataWindows,"VolumeAdjusterData");
     }
 
     private float sample(float x, float y, float z){

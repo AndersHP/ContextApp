@@ -14,14 +14,13 @@ public class VolumeActuator {
         this.audioManager = audioManager;
     }
 
-    public void setVolume(){
+    public void setVolume(boolean high){
 
-        int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
-
-        int minVolum = 0; // Tror jeg
+        // Only max volume or mute
+        int volume = high ? audioManager.getStreamMaxVolume(AudioManager.STREAM_RING) : 0;
 
 
         // AudioManager.FLAG_SHOW_UI                     AudioManager.FLAG_PLAY_SOUND
-        audioManager.setStreamVolume(AudioManager.STREAM_RING, maxVolume,AudioManager.FLAG_SHOW_UI ); // Siger bip når volume ændres
+        audioManager.setStreamVolume(AudioManager.STREAM_RING, volume,AudioManager.FLAG_SHOW_UI );
     }
 }

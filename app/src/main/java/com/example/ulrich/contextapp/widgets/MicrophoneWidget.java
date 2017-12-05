@@ -13,12 +13,24 @@ import java.io.IOException;
 
 public class MicrophoneWidget {
     private MediaRecorder mRecorder;
+    private boolean isStarted = false;
 
     public MicrophoneWidget()
     {
+        mRecorder = new MediaRecorder();
+    }
 
-        mRecorder = new MediaRecorder();
-        mRecorder = new MediaRecorder();
+    public double getLastAmplitudeReading()
+    {
+        double amplitude =  mRecorder.getMaxAmplitude();
+        double amplitudeDb = 20 * Math.log10((double)Math.abs(amplitude));
+
+        return amplitudeDb;
+    }
+
+    public void start()
+    {
+
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_WB);
@@ -30,16 +42,18 @@ public class MicrophoneWidget {
         }
         mRecorder.start();
 
-        mRecorder.getMaxAmplitude();;
+        mRecorder.getMaxAmplitude(); // first reading is always 0, so call it once after setting up
+        isStarted = true;
     }
 
-    public double getLastAmplitudeReading()
+    public void stop()
     {
+        mRecorder.stop();
+        mRecorder.reset();
+        isStarted = false;
+    }
 
-//listening to the user
-        double amplitude =  mRecorder.getMaxAmplitude();
-        double amplitudeDb = 20 * Math.log10((double)Math.abs(amplitude));
-
-        return amplitudeDb;
+    public boolean isStarted(){
+        return isStarted;
     }
 }

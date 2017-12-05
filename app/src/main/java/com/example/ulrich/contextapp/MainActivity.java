@@ -29,9 +29,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d("MAINACTIVIT",    "MANACTIVITY ONCREATE CALLED");
-        aggregator = new Aggregator((SensorManager) getSystemService(Context.SENSOR_SERVICE));
 
+        aggregator = new Aggregator((SensorManager) getSystemService(Context.SENSOR_SERVICE), 200, false);
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -43,28 +42,24 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
-
         setListeners();
     }
 
     private void setListeners()
     {
-
         // initialize dropdown
         final Spinner dropdown = (Spinner)findViewById(R.id.spinner1);
         String[] items = new String[]{"run", "walkNoisy", "walkSilent", "cycle","stand"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
         dropdown.setAdapter(adapter);
 
-
         final Button button = (Button)findViewById(R.id.button1);
         button.setOnClickListener(new View.OnClickListener() {
             boolean isCollecting = false;
             public void onClick(View v) {
-
                 String className = dropdown.getSelectedItem().toString();
-
                 isCollecting = !isCollecting;
+
                 if(isCollecting){
 
                     // When starting to collect, update classname and start a new thread
@@ -85,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
         button2.setOnClickListener(new View.OnClickListener(){
 
             public void onClick(View v){
+                // Stop collecting when we switch view
+                aggregator.setCollecting(false);
+
                 Intent intent = new Intent(MainActivity.this, ClassifierActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 MainActivity.this.startActivity(intent);

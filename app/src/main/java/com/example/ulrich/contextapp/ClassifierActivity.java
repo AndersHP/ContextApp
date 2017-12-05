@@ -2,25 +2,21 @@ package com.example.ulrich.contextapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.ulrich.contextapp.actuators.VolumeActuator;
-
 public class ClassifierActivity extends AppCompatActivity {
 
+    private Classif classifier;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classifier);
-        Log.d("hey", "created new Classifier activity");
-
-        VolumeActuator v = new VolumeActuator((AudioManager)getSystemService(Context.AUDIO_SERVICE));
-        v.setVolume();
+        classifier = new Classif((AudioManager)getSystemService(Context.AUDIO_SERVICE), (SensorManager) getSystemService(Context.SENSOR_SERVICE), getAssets());
         setListeners();
     }
 
