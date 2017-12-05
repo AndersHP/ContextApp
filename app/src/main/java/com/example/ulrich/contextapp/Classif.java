@@ -1,5 +1,6 @@
 package com.example.ulrich.contextapp;
 
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
@@ -37,11 +38,20 @@ public class Classif
     public Classif(AudioManager audioManager, SensorManager sensorManager, AssetManager assetMgr)
     {
         this.assetMgr = assetMgr;
+        aggregator = new Aggregator(sensorManager, 200, true);
 
         volumeActuator = new VolumeActuator(audioManager);
         // Only classify every 0.2 * 128 second
        // aggregator = new Aggregator(sensorManager, 200, true);
         startClassifying();
+    }
+
+    public void startRecievingData()
+    {
+        aggregator.setCurrentClass("-");
+        Thread thread = new Thread(aggregator);
+        aggregator.setCollecting(true);
+        thread.start();
     }
 
     public void startClassifying()

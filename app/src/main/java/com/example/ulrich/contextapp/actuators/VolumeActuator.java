@@ -19,7 +19,6 @@ public class VolumeActuator {
         // Only max volume or mute
         int volume = high ? audioManager.getStreamMaxVolume(AudioManager.STREAM_RING) : 0;
 
-
         // AudioManager.FLAG_SHOW_UI                     AudioManager.FLAG_PLAY_SOUND
         audioManager.setStreamVolume(AudioManager.STREAM_RING, volume,AudioManager.FLAG_SHOW_UI );
     }

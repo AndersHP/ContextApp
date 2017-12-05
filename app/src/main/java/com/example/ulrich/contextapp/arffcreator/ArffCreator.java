@@ -46,11 +46,13 @@ public class ArffCreator {
         Attribute stDevMicAtt = new Attribute("stDevAcc");
 
         FastVector classNames = new FastVector(5);
-        classNames.addElement("stand");                    //here you set all the classes that appear at the top of the .arff file later
+
+        classNames.addElement("cycle");//here you set all the classes that appear at the top of the .arff file later
         classNames.addElement("walkNoisy");
         classNames.addElement("walkSilent");
         classNames.addElement("run");
-        classNames.addElement("cycle");
+        classNames.addElement("stand");
+
         Attribute classAtt = new Attribute("class", classNames);
         // Declare the feature vector
         FastVector attributes = new  FastVector(8);

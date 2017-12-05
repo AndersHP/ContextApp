@@ -66,6 +66,10 @@ public class Aggregator implements Runnable
         currentIndex = 0;
     }
 
+    public DataWindow getLastDataWindow(){
+        return lastDataWindow;
+    }
+
     private float getCurrentHour()
     {
         return Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
@@ -76,6 +80,7 @@ public class Aggregator implements Runnable
     {
         while (collecting)
         {
+
             // Wait abit between readings
             long curTime = System.currentTimeMillis();
             if ((curTime - lastUpdate) > SAMPLE_FREQUENCY) {
@@ -158,4 +163,6 @@ public class Aggregator implements Runnable
         double z_squared = Math.pow(z,2);
         return (float)Math.sqrt(x_squared + y_squared + z_squared);
     }
+
+
 }

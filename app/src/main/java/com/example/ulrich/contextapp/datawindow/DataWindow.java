@@ -19,4 +19,9 @@ public class DataWindow {
         this.stDevMic = stDevMic;
         this.className = className;
     }
+
+    public String toString()
+    {
+        return "Hour of day: " + hourOfDay + " minAcc: " + minAcc + " maxAcc: " + maxAcc + " stDevMagAcc: " + stDevMagAcc + " minMic: " + minMic + " maxMic: " + maxMic + " stDevmic: " + stDevMic + " className: " + className;
+    }
 }
