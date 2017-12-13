@@ -56,32 +56,27 @@ public class Classif
 
     public void startClassifying()
     {
-        DataWindow window = new DataWindow(22,10,4,10,24,10,"?");
-        Instance newInstance = new Instance(8);
+        DataWindow window = new DataWindow(22,10,4,10,"?");
+        Instance newInstance = new Instance(5);
 
-        Attribute hour = new Attribute("hourOfDay");
         Attribute minAccAtt = new Attribute("minAcc");
         Attribute maxAccAtt = new Attribute("maxAcc");
         Attribute sdDevAccAtt = new Attribute("sdDevAcc");
-        Attribute minMicAtt = new Attribute("minMic");
-        Attribute maxMicAtt = new Attribute("maxMic");
-        Attribute stDevMicAtt = new Attribute("stDevAcc");
-        FastVector classNames = new FastVector(5);
-        classNames.addElement("stand");                    //here you set all the classes that appear at the top of the .arff file later
+        Attribute avgMicAmp = new Attribute("avgMicAmp");
+        FastVector classNames = new FastVector(6);
+        classNames.addElement("cycle");//here you set all the classes that appear at the top of the .arff file later
         classNames.addElement("walkNoisy");
         classNames.addElement("walkSilent");
         classNames.addElement("run");
-        classNames.addElement("cycle");
+        classNames.addElement("stationarySilent");
+        classNames.addElement("stationaryNoisy");
         Attribute classAtt = new Attribute("class", classNames);
 
         FastVector attributes = new  FastVector(8);
-        attributes.addElement(hour);
         attributes.addElement(minAccAtt);
         attributes.addElement(maxAccAtt);
         attributes.addElement(sdDevAccAtt);
-        attributes.addElement(minMicAtt);
-        attributes.addElement(maxMicAtt);
-        attributes.addElement(stDevMicAtt);
+        attributes.addElement(avgMicAmp);
         attributes.addElement(classAtt);
         //Create the Instances object
         Instances data = new Instances("Best.Context.app", attributes, 0);
@@ -89,10 +84,7 @@ public class Classif
         newInstance.setValue(1, window.minAcc);
         newInstance.setValue(2, window.maxAcc);
         newInstance.setValue(3, window.stDevMagAcc);
-        newInstance.setValue(4, window.minMic);
-        newInstance.setValue(5, window.maxMic);
-     //   newInstance.setValue(7, "run");
-        newInstance.setValue(6, window.stDevMic);
+        newInstance.setValue(4, window.avgMicAmplitude);
 
         data.add(newInstance);
 

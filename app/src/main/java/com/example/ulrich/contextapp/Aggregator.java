@@ -90,8 +90,9 @@ public class Aggregator implements Runnable
                 microphoneReadings[currentIndex] = microphoneReading;
                 accelerometerReadings[currentIndex] = accelerometerReading;
 
-                if (currentIndex == 63 || currentIndex == 127)
+                if ((currentIndex == 63 || currentIndex == 127) && microphoneReadings[127] != 0f)
                 {
+
                     makeDataWindow();
                 }
                 currentIndex++;
@@ -102,7 +103,7 @@ public class Aggregator implements Runnable
     private void makeDataWindow()
     {
         // Calculate accelerometer min, max
-        int N = currentIndex; //window size
+        int N = 128; //window size
         float minAcc = Float.MAX_VALUE;
         float maxAcc = Float.MIN_VALUE;
         float sumAcc = 0;
@@ -122,33 +123,20 @@ public class Aggregator implements Runnable
         float stdDevAcc = (float)Math.sqrt(summedDifference / (N-1)); //standard deviation
 
 
-        // Calculate microphone min, max
-        float minMic = Float.MAX_VALUE;
-        float maxMic = Float.MIN_VALUE;
-        float sumMic = 0;
-        for (int i = 0; i < N; i++) {
-            float val = (float)microphoneReadings[i];
-            if(val < minMic) { minMic = val; }
-            if(val > maxMic) { maxMic = val; }
-            sumMic += val;
+        float avgSum = 0;
+        for(int i = 0; i< N; i++){
+            avgSum += microphoneReadings[i];
         }
-
-
-        // Calculate stdDevMic
-        float mean2 = sumMic/N;
-        float summedDifference2 = 0;
-        for (int i = 0; i < N; i++) {
-            summedDifference2 += Math.pow(microphoneReadings[i] - mean2,2);
-        }
-        float stdDevMic = (float)Math.sqrt(summedDifference2 / (N-1)); //standard deviation
+        float avgMicAmp = avgSum/N;
 
 
         Log.d("newWindow", "Making new datawindow" );
-        DataWindow newWindow = new DataWindow(minAcc, maxAcc, stdDevAcc, minMic, maxMic, stdDevMic, currentClass);
+        DataWindow newWindow = new DataWindow(minAcc, maxAcc, stdDevAcc, avgMicAmp, currentClass);
         dataWindows.add(newWindow);
         lastDataWindow = newWindow;
 
-        if(!classifying)
+        // only create new file every 20 sec
+        if(!classifying && dataWindows.size() % 20 == 0)
             ArffCreator.saveArff(dataWindows,"VolumeAdjusterData");
     }
 

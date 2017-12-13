@@ -23,9 +23,7 @@ public class MicrophoneWidget {
     public double getLastAmplitudeReading()
     {
         double amplitude =  mRecorder.getMaxAmplitude();
-        double amplitudeDb = 20 * Math.log10((double)Math.abs(amplitude));
-
-        return amplitudeDb;
+        return amplitude;
     }
 
     public void start()

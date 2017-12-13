@@ -42,11 +42,12 @@ public class ClassifierActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classifier);
 
-        map.put(0.0, "stand");
+        map.put(0.0, "stationarySilent");
         map.put(1.0, "walkNoisy");
         map.put(2.0, "walkSilent");
         map.put(3.0, "run");
         map.put(4.0, "cycle");
+        map.put(5.0, "stationaryNoisy");
 
         //classifier = new Classif((AudioManager)getSystemService(Context.AUDIO_SERVICE), (SensorManager) getSystemService(Context.SENSOR_SERVICE), getAssets());
 
@@ -68,9 +69,6 @@ public class ClassifierActivity extends AppCompatActivity {
                         lastUpdate = curTime;
 
                         final DataWindow d = aggregator.getLastDataWindow();
-
-                        d.minAcc = 13.2f;
-                        d.maxMic = 25;
 
                         runOnUiThread(new Runnable() {
                             @Override
@@ -126,29 +124,26 @@ public class ClassifierActivity extends AppCompatActivity {
     {
         Log.d("DATAWINDOW FOR PRED: ", window + "");
        // DataWindow window = new DataWindow(23,(float) 13.2,10,4,10,24,10,"?");
-        Instance newInstance = new Instance(8);
+        Instance newInstance = new Instance(5);
 
         Attribute minAccAtt = new Attribute("minAcc");
         Attribute maxAccAtt = new Attribute("maxAcc");
         Attribute sdDevAccAtt = new Attribute("sdDevAcc");
-        Attribute minMicAtt = new Attribute("minMic");
-        Attribute maxMicAtt = new Attribute("maxMic");
-        Attribute stDevMicAtt = new Attribute("stDevAcc");
-        FastVector classNames = new FastVector(5);
+        Attribute avgMicAmp = new Attribute("avgMicAmp");
+        FastVector classNames = new FastVector(6);
         classNames.addElement("cycle");//here you set all the classes that appear at the top of the .arff file later
         classNames.addElement("walkNoisy");
         classNames.addElement("walkSilent");
         classNames.addElement("run");
-        classNames.addElement("stand");
+        classNames.addElement("stationarySilent");
+        classNames.addElement("stationaryNoisy");
         Attribute classAtt = new Attribute("class", classNames);
 
         FastVector attributes = new  FastVector(8);
         attributes.addElement(minAccAtt);
         attributes.addElement(maxAccAtt);
         attributes.addElement(sdDevAccAtt);
-        attributes.addElement(minMicAtt);
-        attributes.addElement(maxMicAtt);
-        attributes.addElement(stDevMicAtt);
+        attributes.addElement(avgMicAmp);
         attributes.addElement(classAtt);
         //Create the Instances object
         Instances data = new Instances("Best.Context.app", attributes, 0);
@@ -156,10 +151,7 @@ public class ClassifierActivity extends AppCompatActivity {
         newInstance.setValue(1, window.minAcc);
         newInstance.setValue(2, window.maxAcc);
         newInstance.setValue(3, window.stDevMagAcc);
-        newInstance.setValue(4, window.minMic);
-        newInstance.setValue(5, window.maxMic);
-        //   newInstance.setValue(7, "run");
-        newInstance.setValue(6, window.stDevMic);
+        newInstance.setValue(4, window.avgMicAmplitude);
 
         data.add(newInstance);
 

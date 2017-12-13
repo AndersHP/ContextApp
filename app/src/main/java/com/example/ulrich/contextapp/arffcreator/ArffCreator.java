@@ -40,27 +40,24 @@ public class ArffCreator {
         Attribute minAccAtt = new Attribute("minAcc");
         Attribute maxAccAtt = new Attribute("maxAcc");
         Attribute sdDevAccAtt = new Attribute("sdDevAcc");
-        Attribute minMicAtt = new Attribute("minMic");
-        Attribute maxMicAtt = new Attribute("maxMic");
-        Attribute stDevMicAtt = new Attribute("stDevAcc");
+        Attribute avgMicAmplitude = new Attribute("avgMicAmplitude");
 
-        FastVector classNames = new FastVector(5);
+        FastVector classNames = new FastVector(6);
 
         classNames.addElement("cycle");//here you set all the classes that appear at the top of the .arff file later
         classNames.addElement("walkNoisy");
         classNames.addElement("walkSilent");
         classNames.addElement("run");
-        classNames.addElement("stand");
+        classNames.addElement("stationarySilent");
+        classNames.addElement("stationaryNoisy");
 
         Attribute classAtt = new Attribute("class", classNames);
         // Declare the feature vector
-        FastVector attributes = new  FastVector(7);
+        FastVector attributes = new  FastVector(5);
         attributes.addElement(minAccAtt);
         attributes.addElement(maxAccAtt);
         attributes.addElement(sdDevAccAtt);
-        attributes.addElement(minMicAtt);
-        attributes.addElement(maxMicAtt);
-        attributes.addElement(stDevMicAtt);
+        attributes.addElement(avgMicAmplitude);
         attributes.addElement(classAtt);
         //Create the Instances object
         Instances data = new Instances("Best.Context.app", attributes, 0);
@@ -69,13 +66,11 @@ public class ArffCreator {
 
         for(DataWindow window : dataWindows)
         {
-            Instance newInstance = new Instance(7);
+            Instance newInstance = new Instance(5);
             newInstance.setValue(minAccAtt, window.minAcc);
             newInstance.setValue(maxAccAtt, window.maxAcc);
             newInstance.setValue(sdDevAccAtt, window.stDevMagAcc);
-            newInstance.setValue(minMicAtt, window.minMic);
-            newInstance.setValue(maxMicAtt, window.maxMic);
-            newInstance.setValue(stDevMicAtt, window.stDevMic);
+            newInstance.setValue(avgMicAmplitude, window.avgMicAmplitude);
             newInstance.setValue(classAtt, window.className);
 
             data.add(newInstance);

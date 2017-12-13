@@ -5,23 +5,21 @@ package com.example.ulrich.contextapp.datawindow;
  */
 
 public class DataWindow {
-    public float  minAcc, maxAcc, stDevMagAcc, minMic, maxMic, stDevMic ;
+    public float  minAcc, maxAcc, stDevMagAcc, avgMicAmplitude ;
     public String className;
 
-    public DataWindow(float minAcc, float maxAcc, float stDevMagAcc, float minMic,float maxMic, float stDevMic, String className)
+    public DataWindow(float minAcc, float maxAcc, float stDevMagAcc, float avgMicAmplitude, String className)
     {
 
         this.minAcc = minAcc;
         this.maxAcc = maxAcc;
         this.stDevMagAcc = stDevMagAcc;
-        this.minMic = minMic;
-        this.maxMic = maxMic;
-        this.stDevMic = stDevMic;
+        this.avgMicAmplitude = avgMicAmplitude;
         this.className = className;
     }
 
     public String toString()
     {
-        return "minAcc: " + minAcc + " maxAcc: " + maxAcc + " stDevMagAcc: " + stDevMagAcc + " minMic: " + minMic + " maxMic: " + maxMic + " stDevmic: " + stDevMic + " className: " + className;
+        return "minAcc: " + minAcc + " maxAcc: " + maxAcc + " stDevMagAcc: " + stDevMagAcc + "AvgMicAmp:"+ avgMicAmplitude + " className: " + className;
     }
 }

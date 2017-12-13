@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        aggregator = new Aggregator((SensorManager) getSystemService(Context.SENSOR_SERVICE), 200, false);
+        aggregator = new Aggregator((SensorManager) getSystemService(Context.SENSOR_SERVICE), 40, false);
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     {
         // initialize dropdown
         final Spinner dropdown = (Spinner)findViewById(R.id.spinner1);
-        String[] items = new String[]{"run", "walkNoisy", "walkSilent", "cycle","stand"};
+        String[] items = new String[]{"run", "walkNoisy", "walkSilent", "cycle", "stationaryNoisy", "stationarySilent"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
         dropdown.setAdapter(adapter);
 
