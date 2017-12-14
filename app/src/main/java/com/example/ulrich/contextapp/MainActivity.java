@@ -1,25 +1,14 @@
 package com.example.ulrich.contextapp;
-import android.Manifest;
-import android.app.NotificationManager;
+
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.hardware.SensorManager;
-import android.os.Build;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.view.View;
-
-
-import com.example.ulrich.contextapp.widgets.AccelerometerWidget;
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,18 +19,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        aggregator = new Aggregator((SensorManager) getSystemService(Context.SENSOR_SERVICE), 40, false);
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && !notificationManager.isNotificationPolicyAccessGranted()) {
-            Intent intent = new Intent(
-                    android.provider.Settings
-                            .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-            startActivity(intent);
-        }
-
+        aggregator = new Aggregator((SensorManager) getSystemService(Context.SENSOR_SERVICE), 200, false, this);
 
         setListeners();
     }
@@ -83,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v){
                 // Stop collecting when we switch view
                 aggregator.setCollecting(false);
+                button.setText("Start collecting");
 
                 Intent intent = new Intent(MainActivity.this, ClassifierActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);

@@ -8,7 +8,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 
 public class AccelerometerWidget implements SensorEventListener{
 
@@ -26,7 +25,9 @@ public class AccelerometerWidget implements SensorEventListener{
         this.senSensorManager.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
     }
 
-    public float[] getReading(){
+    // This is the method the aggreator use to get a new tuple of accelerometer data
+    public float[] getReading()
+    {
         return lastReading;
     }
 

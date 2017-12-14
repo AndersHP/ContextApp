@@ -1,14 +1,10 @@
 package com.example.ulrich.contextapp.arffcreator;
 
-import android.util.Log;
 
 import com.example.ulrich.contextapp.datawindow.DataWindow;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
-
 import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -41,6 +37,7 @@ public class ArffCreator {
         Attribute maxAccAtt = new Attribute("maxAcc");
         Attribute sdDevAccAtt = new Attribute("sdDevAcc");
         Attribute avgMicAmplitude = new Attribute("avgMicAmplitude");
+        Attribute avgSpeed = new Attribute("avgSpeed");
 
         FastVector classNames = new FastVector(6);
 
@@ -53,24 +50,24 @@ public class ArffCreator {
 
         Attribute classAtt = new Attribute("class", classNames);
         // Declare the feature vector
-        FastVector attributes = new  FastVector(5);
+        FastVector attributes = new  FastVector(6);
         attributes.addElement(minAccAtt);
         attributes.addElement(maxAccAtt);
         attributes.addElement(sdDevAccAtt);
         attributes.addElement(avgMicAmplitude);
+        attributes.addElement(avgSpeed);
         attributes.addElement(classAtt);
         //Create the Instances object
         Instances data = new Instances("Best.Context.app", attributes, 0);
 
-
-
         for(DataWindow window : dataWindows)
         {
-            Instance newInstance = new Instance(5);
+            Instance newInstance = new Instance(6);
             newInstance.setValue(minAccAtt, window.minAcc);
             newInstance.setValue(maxAccAtt, window.maxAcc);
             newInstance.setValue(sdDevAccAtt, window.stDevMagAcc);
             newInstance.setValue(avgMicAmplitude, window.avgMicAmplitude);
+            newInstance.setValue(avgSpeed, window.avgSpeed);
             newInstance.setValue(classAtt, window.className);
 
             data.add(newInstance);

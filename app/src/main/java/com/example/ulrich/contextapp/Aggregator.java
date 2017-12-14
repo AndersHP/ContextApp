@@ -1,17 +1,15 @@
 package com.example.ulrich.contextapp;
 
 import android.content.Context;
-import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.util.Log;
-
 import com.example.ulrich.contextapp.arffcreator.ArffCreator;
 import com.example.ulrich.contextapp.datawindow.DataWindow;
 import com.example.ulrich.contextapp.widgets.AccelerometerWidget;
+import com.example.ulrich.contextapp.widgets.GPSWidget;
 import com.example.ulrich.contextapp.widgets.MicrophoneWidget;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 /**
  * Created by Anders on 26-11-2017.
@@ -27,19 +25,22 @@ public class Aggregator implements Runnable
     private boolean collecting = false;
     private AccelerometerWidget accelerometerWidget;
     private MicrophoneWidget microphoneWidget;
+    private GPSWidget gpsWidget;
     private boolean classifying;
 
+    private double[] gpsReadings = new double[128];
     private double[] microphoneReadings = new double[128];
     private float[][] accelerometerReadings = new float[128][3];
 
     private String currentClass;
 
-    public Aggregator(SensorManager sensorManager, int sampleFrequency, boolean classifying)
+    public Aggregator(SensorManager sensorManager, int sampleFrequency, boolean classifying, Context c)
     {
         this.classifying = classifying;
         SAMPLE_FREQUENCY = sampleFrequency;
         accelerometerWidget = new AccelerometerWidget(sampleFrequency, sensorManager);
         microphoneWidget = new MicrophoneWidget();
+        gpsWidget = new GPSWidget(c);
     }
 
     public void setCurrentClass(String currentClass){
@@ -63,6 +64,7 @@ public class Aggregator implements Runnable
     private void clearReadings(){
         microphoneReadings = new double[128];
         accelerometerReadings = new float[128][3];
+        gpsReadings = new double[128];
         currentIndex = 0;
     }
 
@@ -75,7 +77,6 @@ public class Aggregator implements Runnable
     {
         while (collecting)
         {
-
             // Wait abit between readings
             long curTime = System.currentTimeMillis();
             if ((curTime - lastUpdate) > SAMPLE_FREQUENCY) {
@@ -84,15 +85,15 @@ public class Aggregator implements Runnable
                 if (currentIndex > 127)
                     currentIndex = 0;
 
-
                 double microphoneReading = microphoneWidget.getLastAmplitudeReading();
                 float[] accelerometerReading = accelerometerWidget.getReading();
+                double currentSpeed = gpsWidget.getCurrentSpeed();
                 microphoneReadings[currentIndex] = microphoneReading;
                 accelerometerReadings[currentIndex] = accelerometerReading;
+                gpsReadings[currentIndex] = currentSpeed;
 
                 if ((currentIndex == 63 || currentIndex == 127) && microphoneReadings[127] != 0f)
                 {
-
                     makeDataWindow();
                 }
                 currentIndex++;
@@ -129,13 +130,20 @@ public class Aggregator implements Runnable
         }
         float avgMicAmp = avgSum/N;
 
+        // calc avg speed
+        double speedSum = 0;
+        for(int i = 0; i<N; i++)
+        {
+            speedSum += gpsReadings[i];
+        }
+        double avgSpeed = speedSum / N;
 
         Log.d("newWindow", "Making new datawindow" );
-        DataWindow newWindow = new DataWindow(minAcc, maxAcc, stdDevAcc, avgMicAmp, currentClass);
+        DataWindow newWindow = new DataWindow(minAcc, maxAcc, stdDevAcc, avgMicAmp,avgSpeed, currentClass);
         dataWindows.add(newWindow);
         lastDataWindow = newWindow;
 
-        // only create new file every 20 sec
+        // only create new file every 20 datawindow and only if not classifying
         if(!classifying && dataWindows.size() % 20 == 0)
             ArffCreator.saveArff(dataWindows,"VolumeAdjusterData");
     }
@@ -146,6 +154,4 @@ public class Aggregator implements Runnable
         double z_squared = Math.pow(z,2);
         return (float)Math.sqrt(x_squared + y_squared + z_squared);
     }
-
-
 }

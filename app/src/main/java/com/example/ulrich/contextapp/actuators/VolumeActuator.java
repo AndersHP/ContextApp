@@ -1,7 +1,7 @@
 package com.example.ulrich.contextapp.actuators;
 
-import android.content.Context;
 import android.media.AudioManager;
+import android.util.Log;
 
 /**
  * Created by Anders on 02-12-2017.
@@ -15,9 +15,10 @@ public class VolumeActuator {
     }
 
     public void setVolume(boolean high){
+        // If high is true, use max volume, else use volume 1
+        int volume = high ? audioManager.getStreamMaxVolume(AudioManager.STREAM_RING) : 1;
 
-        // Only max volume or mute
-        int volume = high ? audioManager.getStreamMaxVolume(AudioManager.STREAM_RING) : 0;
+        Log.d("VOLUME:" ,"setting volume: " + volume);
 
         // AudioManager.FLAG_SHOW_UI                     AudioManager.FLAG_PLAY_SOUND
         audioManager.setStreamVolume(AudioManager.STREAM_RING, volume,AudioManager.FLAG_SHOW_UI );

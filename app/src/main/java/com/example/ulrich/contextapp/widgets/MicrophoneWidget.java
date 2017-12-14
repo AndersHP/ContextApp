@@ -1,8 +1,5 @@
 package com.example.ulrich.contextapp.widgets;
 
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.media.MediaRecorder;
 
 import java.io.IOException;
@@ -28,7 +25,6 @@ public class MicrophoneWidget {
 
     public void start()
     {
-
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_WB);
